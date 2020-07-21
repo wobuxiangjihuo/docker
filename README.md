@@ -119,9 +119,9 @@ docker  run hello-world
 - 运行容器
  
 	docker run 镜像名	--------------------------	镜像名新建并启动容器
-    --name 					别名为容器起一个名字
-    -d							启动守护式容器（在后台启动容器）
-    -p 							映射端口号：原始端口号		 指定端口号启动
+                --name 					  别名为容器起一个名字
+                -d					  启动守护式容器（在后台启动容器）
+                -p 					  映射端口号：原始端口号		 指定端口号启动
 
 	例：docker run -it --name myTomcat -p 8888:8080 tomcat
    	 docker run -d --name myTomcat -P tomcat
@@ -129,8 +129,8 @@ docker  run hello-world
 - 查看运行的容器
 
 	docker ps					--------------------------	列出所有正在运行的容器
-	-a			正在运行的和历史运行过的容器
-	-q			静默模式，只显示容器编号
+	-a			                       正在运行的和历史运行过的容器
+	-q			                       静默模式，只显示容器编号
 
 - 停止|关闭|重启容器
  
@@ -151,9 +151,9 @@ docker  run hello-world
 - 查看容器的运行日志
 
 	docker logs [OPTIONS] 容器id或容器名	------------------ 查看容器日志
-    -t			 加入时间戳
-    -f			 跟随最新的日志打印
-    --tail 	 数字	显示最后多少条
+                 -t			 加入时间戳
+                 -f			 跟随最新的日志打印
+                 --tail 	 数字	显示最后多少条
 
 
 ```
@@ -165,7 +165,7 @@ docker  run hello-world
 进入容器内部
 	docker exec [options] 容器id 容器内命令 ------------------ 进入容器执行命令
 		-i		以交互模式运行容器，通常与-t一起使用
-    -t		分配一个伪终端    shell窗口   /bin/bash 
+                -t		分配一个伪终端    shell窗口   /bin/bash 
 
 容器内安装软件
 	apt-get update
