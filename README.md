@@ -205,3 +205,149 @@ docker  run hello-world
 
 
 
+### 8.1 安装mysql
+
+```markdown
+# 1.拉取mysql镜像到本地
+	docker pull mysql:tag (tag不加默认最新版本)
+	
+# 2.运行mysql服务
+	docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:tag  						  --没有暴露外部端口外部不能连接
+	docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d  mysql:tag  --没有暴露外部端口
+
+# 3.进入mysql容器
+	docker exec -it 容器名称|容器id bash
+
+# 4.外部查看mysql日志
+	docker logs 容器名称|容器id
+
+# 5.使用自定义配置参数
+	docker run --name mysql -v /root/mysql/conf.d:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root -d mysql:tag
+
+# 6.将容器数据位置与宿主机位置挂载保证数据安全
+	docker run --name mysql -v /root/mysql/data:/var/lib/mysql -v /root/mysql/conf.d:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:tag
+
+# 7.通过其他客户端访问 如在window系统|macos系统使用客户端工具访问
+	
+# 8.将mysql数据库备份为sql文件
+	docker exec mysql|容器id sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /root/all-databases.sql  --导出全部数据
+	docker exec mysql sh -c 'exec mysqldump --databases 库表 -uroot -p"$MYSQL_ROOT_PASSWORD"' > /root/all-databases.sql  --导出指定库数据
+	docker exec mysql sh -c 'exec mysqldump --no-data --databases 库表 -uroot -p"$MYSQL_ROOT_PASSWORD"' > /root/all-databases.sql  --导出指定库数据不要数据
+
+# 9.执行sql文件到mysql中
+	docker exec -i mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < /root/xxx.sql
+```
+
+### 8.2 安装Redis服务
+
+```markdown
+# 1.在docker hub搜索redis镜像
+	docker search redis
+
+# 2.拉取redis镜像到本地
+	docker pull redis
+
+# 3.启动redis服务运行容器
+	docker run --name redis -d redis:tag (没有暴露外部端口)
+	docker run --name redis -p 6379:6379 -d redis:tag (暴露外部宿主机端口为6379进行连接) 
+
+# 4.查看启动日志
+	docker logs -t -f 容器id|容器名称
+
+# 5.进入容器内部查看
+	docker exec -it 容器id|名称 bash  
+
+# 6.加载外部自定义配置启动redis容器
+	默认情况下redis官方镜像中没有redis.conf配置文件 需要去官网下载指定版本的配置文件
+	1. wget http://download.redis.io/releases/redis-5.0.8.tar.gz  下载官方安装包
+	2. 将官方安装包中配置文件进行复制到宿主机指定目录中如 /root/redis/redis.conf文件
+	3. 修改需要自定义的配置
+		 bind 0.0.0.0 开启远程权限
+		 appenonly yes 开启aof持久化
+	4. 加载配置启动
+	docker run --name redis -v /root/redis:/usr/local/etc/redis -p 6379:6379 -d redis redis-server /usr/local/etc/redis/redis.conf  
+
+# 7.将数据目录挂在到本地保证数据安全
+	docker run --name redis -v /root/redis/data:/data -v /root/redis/redis.conf:/usr/local/etc/redis/redis.conf -p 6379:6379 -d redis redis-server 					/usr/local/etc/redis/redis.conf  
+```
+
+### 8.3 安装Nginx
+
+```markdown
+# 1.在docker hub搜索nginx
+	docker search nginx
+
+# 2.拉取nginx镜像到本地
+	[root@localhost ~]# docker pull nginx
+    Using default tag: latest
+    latest: Pulling from library/nginx
+    afb6ec6fdc1c: Pull complete 
+    b90c53a0b692: Pull complete 
+    11fa52a0fdc0: Pull complete 
+    Digest: sha256:30dfa439718a17baafefadf16c5e7c9d0a1cde97b4fd84f63b69e13513be7097
+    Status: Downloaded newer image for nginx:latest
+    docker.io/library/nginx:latest
+
+# 3.启动nginx容器
+		docker run -p 80:80 --name nginx01 -d nginx
+
+# 4.进入容器
+		docker exec -it nginx01 /bin/bash
+		查找目录:  whereis nginx
+		配置文件:  /etc/nginx/nginx.conf
+
+# 5.复制配置文件到宿主机
+		docker cp nginx01(容器id|容器名称):/etc/nginx/nginx.conf 宿主机名录
+
+# 6.挂在nginx配置以及html到宿主机外部
+		docker run --name nginx02 -v /root/nginx/nginx.conf:/etc/nginx/nginx.conf -v /root/nginx/html:/usr/share/nginx/html -p 80:80 -d nginx		
+```
+
+----
+
+### 8.4 安装Tomcat
+
+```markdown
+# 1.在docker hub搜索tomcat
+	docker search tomcat
+
+# 2.下载tomcat镜像
+	docker pull tomcat
+
+# 3.运行tomcat镜像
+	docker run -p 8080:8080 -d --name mytomcat tomcat
+
+# 4.进入tomcat容器
+	docker exec -it mytomcat /bin/bash
+
+# 5.将webapps目录挂载在外部
+	docker run -p 8080:8080 -v /root/webapps:/usr/local/tomcat/webapps -d --name mytomcat tomcat
+
+```
+
+-----
+
+### 8.5 安装MongoDB数据库
+
+```markdown
+# 1.运行mongDB
+	docker run -d -p 27017:27017 --name mymongo mongo  ---无须权限
+	docker logs -f mymongo --查看mongo运行日志
+
+# 2.进入mongodb容器
+	docker exec -it mymongo /bin/bash
+		直接执行mongo命令进行操作
+
+# 3.常见具有权限的容器
+	docker run --name  mymongo  -p 27017:27017  -d mongo --auth
+
+# 4.进入容器配置用户名密码
+	mongo
+	use admin 选择admin库
+	db.createUser({user:"root",pwd:"root",roles:[{role:'root',db:'admin'}]})   //创建用户,此用户创建成功,则后续操作都需要用户认证
+	exit
+
+# 5.将mongoDB中数据目录映射到宿主机中
+	docker run -d -p 27017:27017 -v /root/mongo/data:/data/db --name mymongo mongo 
+```
+
