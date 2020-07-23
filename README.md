@@ -205,7 +205,7 @@ docker  run hello-world
 
 
 
-### 8.1 安装mysql
+###  安装mysql
 
 ```markdown
 # 1.拉取mysql镜像到本地
@@ -238,7 +238,7 @@ docker  run hello-world
 	docker exec -i mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < /root/xxx.sql
 ```
 
-### 8.2 安装Redis服务
+###  安装Redis服务
 
 ```markdown
 # 1.在docker hub搜索redis镜像
@@ -271,7 +271,7 @@ docker  run hello-world
 	docker run --name redis -v /root/redis/data:/data -v /root/redis/redis.conf:/usr/local/etc/redis/redis.conf -p 6379:6379 -d redis redis-server 					/usr/local/etc/redis/redis.conf  
 ```
 
-### 8.3 安装Nginx
+###  安装Nginx
 
 ```markdown
 # 1.在docker hub搜索nginx
@@ -305,7 +305,7 @@ docker  run hello-world
 
 ----
 
-### 8.4 安装Tomcat
+###  安装Tomcat
 
 ```markdown
 # 1.在docker hub搜索tomcat
@@ -327,7 +327,7 @@ docker  run hello-world
 
 -----
 
-### 8.5 安装MongoDB数据库
+###  安装MongoDB数据库
 
 ```markdown
 # 1.运行mongDB
